@@ -20,6 +20,8 @@ var cities = []; //   Array of city search history
 const forecastDays = 5;
 
 
+
+
 // called on initial page load to store city search history from localStorage in var
 function init() {
     // currentDateDisplay.innerHTML = currentDate; // display current date
@@ -37,7 +39,7 @@ function getCurrentWeather(event) {
         const lat = response[0].lat;
         const lon = response[0].lon;
     
-        return fetch(`${openWeatherURL}lat=${lat}&lon=${lon}&appid=${APIKey}`)
+        return fetch(`${openWeatherURL}lat=${lat}&lon=${lon}&appid=${APIKey}&units=imperial`)
             .then(response => response.json())
             .then(response => {
                 console.log(response);
@@ -61,10 +63,33 @@ function getCurrentWeather(event) {
                     
                     // populating weather card from an  weather object data
                     const fragment = document.createDocumentFragment();
-                    const weatherNodes  = [response.daily[i].dt, response.daily[i].clouds];
+                    //TODO: response.daily[i].dt
+                    const weatherNodes  = [
+                        {
+                            label: '',
+                            value: moment().format("MM/DD/YYYY"),
+                        }, 
+                        {
+                            label: 'Icon',
+                            value: response.daily[i].weather[0].icon,
+                        },
+                        {
+                            label: 'Temp',
+                            value: `${response.daily[i].temp.day} °F`,
+                        },
+                        {
+                            label: 'Wind',
+                            value: `${response.daily[i].wind_speed} MPH`,
+                        },
+                        {
+                            label: 'Humidity',
+                            value: `${response.daily[i].humidity} %`,
+                        }
+                    ];
                     weatherNodes.forEach((weatherNodes) => {
+                        
                         const li = document.createElement('li');
-                        li.textContent = weatherNodes;
+                        li.textContent = `${weatherNodes.label}: ${weatherNodes.value}`;
                         li.setAttribute("data-index", i);
                         fragment.appendChild(li);
                     });
