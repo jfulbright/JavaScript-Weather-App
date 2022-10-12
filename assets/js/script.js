@@ -14,7 +14,7 @@ var weatherCard = document.querySelector('#weatherCard');
 const APIKey = "f40b7deac9fefe622d933a55fdf6ef80";
 const geoCodeURL  = "http://api.openweathermap.org/geo/1.0/direct?"
 const openWeatherURL = "https://api.openweathermap.org/data/3.0/onecall?"
-const weatherIconURL = "https://openweathermap.org/img/wn/";
+const weatherIcon = "https://openweathermap.org/img/wn/";
 const currentDate = moment().format("dddd, MMMM Do");
 var cities = []; //   Array of city search history
 const forecastDays = 5;
@@ -63,33 +63,32 @@ function getCurrentWeather(event) {
                     
                     // populating weather card from an  weather object data
                     const fragment = document.createDocumentFragment();
-                    //TODO: response.daily[i].dt
+                    //TODO: 
                     const weatherNodes  = [
                         {
                             label: '',
-                            value: moment().format("MM/DD/YYYY"),
+                            value: moment.unix(response.daily[i].dt).format("MM/DD/YYYY"),
                         }, 
                         {
-                            label: 'Icon',
-                            value: response.daily[i].weather[0].icon,
+                            label: 'Icon:',
+                            value: `${weatherIcon}${response.daily[i].weather[0].icon}.png`,
                         },
                         {
-                            label: 'Temp',
+                            label: 'Temp:',
                             value: `${response.daily[i].temp.day} °F`,
                         },
                         {
-                            label: 'Wind',
+                            label: 'Wind:',
                             value: `${response.daily[i].wind_speed} MPH`,
                         },
                         {
-                            label: 'Humidity',
+                            label: 'Humidity:',
                             value: `${response.daily[i].humidity} %`,
                         }
                     ];
                     weatherNodes.forEach((weatherNodes) => {
-                        
                         const li = document.createElement('li');
-                        li.textContent = `${weatherNodes.label}: ${weatherNodes.value}`;
+                        li.textContent = `${weatherNodes.label} ${weatherNodes.value}`;
                         li.setAttribute("data-index", i);
                         fragment.appendChild(li);
                     });
