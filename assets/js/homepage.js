@@ -2,33 +2,35 @@
 var weatherFormEl = document.querySelector('#weather-form');
 var cityInputEl = document.querySelector('#city-search-term');
 var weatherContainerEl = document.querySelector('#current-weather-container');
+var citySearchEL = document.querySelector("#citySearch-list");
+var currentDateDisplay = document.querySelector(".currentDateEl");
+var currentDateEl = document.querySelector('#currentDate');
 
-// OpenWeather API Variables
+// Global vars
 var APIKey = "34d831003b90009ac92768b6ed04fb6a";
 var weatherIconURL = "https://openweathermap.org/img/wn/";
-
-// Current date/time Variables:
-var currentDateEl = document.querySelector('#currentDate');
 var currentDate = moment().format("dddd, MMMM Do");
-
-// Render current date in header
-var currentDateDisplay = document.querySelector(".currentDateEl");
-currentDateDisplay.innerHTML = currentDate;
-
-// City Search History selectors and vars
-var citySearchEL = document.querySelector("#citySearch-list");
-var cities = []; //   Array of cities search history
-var foo = [];
+var cities = []; //   Array of city search history
 
 
-// Function to handle Weather Search Form 
+// called on initial page load to store city search history from localStorage in var
+function init() {
+  currentDateDisplay.innerHTML = currentDate; // display current date
+  var storedCities = JSON.parse(localStorage.getItem("city"));
+  if (storedCities !== null) {
+    cities = storedCities;
+  }
+  console.log(cities);
+  renderCities();
+}
+
+// Return current weather object from API endpoint 
 function weatherFormHandler (event) {
   event.preventDefault();
 
-  var citySearch = cityInputEl.value.trim();
+  var citySearch = cityInputEl.value.trim(); // store
   // cities.push(citySearch);
-  foo.push(citySearch);
-    
+
 
   if (citySearch) {
     
@@ -59,7 +61,7 @@ var buttonClickHandler = function (event) {
 
 
 // function to render current weather
- function displayWeather (weatherResponse) {
+ function getWeatherData (weatherResponse) {
   console.log(weatherResponse);
   var cityName = weatherResponse.city.name;
   var currentDate;
@@ -105,40 +107,32 @@ var buttonClickHandler = function (event) {
 
 
 
-// TODO: Redner Cities from LocalStorage
-function renderCities() {
-  citySearchEL.innerHTML = "";
+// // TODO: Render Cities from LocalStorage
+// function renderCities() {
+//   citySearchEL.innerHTML = "";
   
-  for (var i = 0; i < cities.length; i++) {
-    var city = cities[i];
+//   for (var i = 0; i < cities.length; i++) {
+//     var city = cities[i];
 
-    var li = document.createElement("li");
-    li.textContent = city;
-    li.setAttribute("data-index", i);
-    li.setAttribute("data-city", city);
+//     var li = document.createElement("li");
+//     li.textContent = city;
+//     li.setAttribute("data-index", i);
+//     li.setAttribute("data-city", city);
 
-    var button = document.createElement("button");
-    button.textContent = "Get Weather";
+//     var button = document.createElement("button");
+//     button.textContent = "Get Weather";
 
-    li.appendChild(button);
-    citySearchEL.appendChild(li);
-  }
-}
+//     li.appendChild(button);
+//     citySearchEL.appendChild(li);
+//   }
+// }
 
-// Store cities in localStorage
-function storeCities(city) {
-  localStorage.setItem("city", JSON.stringify(city));
-}
+// // Store cities in localStorage
+// function storeCities(city) {
+//   localStorage.setItem("city", JSON.stringify(city));
+// }
 
-// called on page load to store city search history from localStorage in var
-function init() {
-  var storedCities = JSON.parse(localStorage.getItem("city"));
-  if (storedCities !== null) {
-    cities = storedCities;
-  }
-  console.log(cities);
-  renderCities();
-}
+
 
 
 
